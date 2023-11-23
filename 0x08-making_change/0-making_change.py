@@ -19,12 +19,20 @@ def makeChange(coins, total):
     - int: The fewest number of coins needed to meet the total. If the total
       cannot be met by any combination of coins, return -1.
     """
-    table = [float('inf')] * (total + 1)
-    table[0] = 0
+    if total <= 0:
+        return 0
+
+    coins.sort(reverse=True)
+
+    if coins and coins[-1] > total:
+        return -1
+
+    dp = [float('inf')] * (total + 1)
+    dp[0] = 0
 
     for i in range(1, total + 1):
         for coin in coins:
             if coin <= i:
-                table[i] = min(table[i], table[i - coin] + 1)
+                dp[i] = min(dp[i], dp[i - coin] + 1)
 
-    return table[total] if table[total] != float('inf') else -1
+    return dp[total] if dp[total] != float('inf') else -1
